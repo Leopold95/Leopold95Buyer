@@ -1,0 +1,4 @@
+name: Buyer
+version: '${project.version}'
+main: me.leopold95.buyer.Buyer
+api-version: '1.19'
