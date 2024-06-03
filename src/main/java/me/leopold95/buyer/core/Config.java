@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,12 +41,14 @@ public class Config {
         messagesConfig.save(messagesConfigFile);
     }
 
-    public static List<?> getList(String path) {
-        return config.getList(path);
-    }
+    public static ConfigurationSection getSection(String path){return config.getConfigurationSection(path);}
 
     public static List<String> getStringList(String path) {
         return config.getStringList(path);
+    }
+
+    public static List<Integer> getIntList(String path) {
+        return config.getIntegerList(path);
     }
 
     public static String getString(String path) {

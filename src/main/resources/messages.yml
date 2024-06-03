@@ -1,0 +1,5 @@
+console-bad: "Эту команда только для игроков"
+
+command-add-args-bad: "Введите команду правильно /buyer %subcommand% %subargs1% %subargs2%"
+command-add-subargs-item: "<предмет>"
+command-add-subargs-cost: "<цена>"
