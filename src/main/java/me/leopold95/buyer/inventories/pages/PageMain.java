@@ -13,16 +13,11 @@ public class PageMain implements InventoryHolder {
     private Inventory inventory;
 
     public PageMain(){
-        inventory = Bukkit.createInventory(this, InventoryType.CHEST, Config.getString("main-page-design"));
-        initView();
+        inventory = Bukkit.createInventory(this, 54, Config.getString("name-main-page"));
     }
 
     @Override
     public @NotNull Inventory getInventory() {
         return inventory;
-    }
-
-    private void initView(){
-        inventory.setItem(3, new ItemStack(Material.GOLD_NUGGET, 1));
     }
 }

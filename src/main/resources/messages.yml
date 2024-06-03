@@ -1,5 +1,7 @@
 console-bad: "Эту команда только для игроков"
 
+commands-permissions-bad: "У вас недостаточно прав для использваония данной команды"
+
 command-add-args-bad: "Введите команду правильно /buyer %subcommand% %subargs1% %subargs2%"
 command-add-subargs-item: "<предмет>"
 command-add-subargs-cost: "<цена>"

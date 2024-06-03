@@ -4,15 +4,20 @@ import me.leopold95.buyer.commands.BuyerCommand;
 import me.leopold95.buyer.commands.BuyerCommandTab;
 import me.leopold95.buyer.core.BuyerAdmin;
 import me.leopold95.buyer.core.Config;
+import me.leopold95.buyer.core.Keys;
 import me.leopold95.buyer.inventories.BuyerInventories;
+import me.leopold95.buyer.listeners.InventoryClicked;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.security.Key;
+
 public final class Buyer extends JavaPlugin {
     public BuyerAdmin buyerAdmin;
+    public Keys keys;
 
-    public Economy economy;
+    public  Economy economy;
 
     @Override
     public void onEnable() {
@@ -23,11 +28,13 @@ public final class Buyer extends JavaPlugin {
         }
 
         Config.register(this);
-
+        keys = new Keys(this);
         buyerAdmin = new BuyerAdmin(this);
 
         getCommand("buyer").setExecutor(new BuyerCommand(this));
         getCommand("buyer").setTabCompleter(new BuyerCommandTab());
+
+        getServer().getPluginManager().registerEvents(new InventoryClicked(this), this);
     }
 
     @Override

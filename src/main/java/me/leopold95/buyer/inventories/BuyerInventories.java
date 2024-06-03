@@ -2,8 +2,10 @@ package me.leopold95.buyer.inventories;
 
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.inventories.pages.PageMain;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +20,12 @@ public class BuyerInventories {
         this.plugin = plugin;
 
         pageMain = new PageMain();
+
     }
 
     public Inventory pageMain(){
         return pageMain.getInventory();
     }
+
+
 }

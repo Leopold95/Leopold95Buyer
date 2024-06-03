@@ -17,20 +17,19 @@ public class BuyerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(!(sender instanceof Player)){
+        if(!(sender instanceof Player player)){
             sender.sendMessage(Config.getMessage("console-bad"));
             return true;
         }
 
         if(args.length == 0){
-            return false;
+            plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.pageMain.getInventory());
+            return true;
         }
-
-        Player player = (Player) sender;
 
         switch (args[0]) {
             case CommandList.OPEN -> {
-                player.openInventory(plugin.buyerAdmin.getPages().pageMain());
+                plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.pageMain.getInventory());
             }
 
             case CommandList.ADD_ITEM -> {

@@ -1,1 +1,13 @@
 name-main-page: "Скупщик"
+
+buyer-open-sound: ""
+buyer-open-sound-volume: 80
+
+buyer-sold-sound: ""
+buyer-sold-sound-volume: 80
+
+buyer-added-sound: ""
+buyer-added-sound-volume: 80
+
+buyer-removed-sound: ""
+buyer-removed-sound-volume: 80
