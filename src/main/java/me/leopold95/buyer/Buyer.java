@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Buyer extends JavaPlugin {
     public BuyerAdmin buyerAdmin;
-    public BuyerInventories buyerInventories;
 
     public Economy economy;
 
@@ -26,7 +25,6 @@ public final class Buyer extends JavaPlugin {
         Config.register(this);
 
         buyerAdmin = new BuyerAdmin(this);
-        buyerInventories = new BuyerInventories(this);
 
         getCommand("buyer").setExecutor(new BuyerCommand(this));
         getCommand("buyer").setTabCompleter(new BuyerCommandTab());

@@ -1,6 +1,7 @@
 package me.leopold95.buyer.core;
 
 import me.leopold95.buyer.Buyer;
+import me.leopold95.buyer.inventories.BuyerInventories;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,9 +19,11 @@ public class BuyerAdmin {
     private FileConfiguration bConfig;
 
     private Buyer plugin;
+    private BuyerInventories inventories;
 
     public BuyerAdmin(Buyer plugin){
         this.plugin = plugin;
+        inventories = new BuyerInventories(this.plugin);
     }
 
     public void addBuyerItem(ItemStack item){
@@ -46,6 +49,10 @@ public class BuyerAdmin {
             }
         }
         return slots;
+    }
+
+    public BuyerInventories getPages(){
+        return inventories;
     }
 
     private void register(JavaPlugin plugin) {

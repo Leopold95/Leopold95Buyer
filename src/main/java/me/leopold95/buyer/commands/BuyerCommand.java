@@ -30,7 +30,7 @@ public class BuyerCommand implements CommandExecutor {
 
         switch (args[0]) {
             case CommandList.OPEN -> {
-                player.openInventory(plugin.buyerInventories.pageMain());
+                player.openInventory(plugin.buyerAdmin.getPages().pageMain());
             }
 
             case CommandList.ADD_ITEM -> {

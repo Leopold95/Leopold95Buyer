@@ -2,7 +2,12 @@ package me.leopold95.buyer.inventories;
 
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.inventories.pages.PageMain;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class BuyerInventories {
     private Buyer plugin;
