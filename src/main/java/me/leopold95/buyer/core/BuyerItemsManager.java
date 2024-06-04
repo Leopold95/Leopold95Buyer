@@ -24,4 +24,24 @@ public class BuyerItemsManager {
         item.setItemMeta(meta);
         return item;
     }
+
+    public ItemStack createSoldAll(){
+        ItemStack item = new ItemStack(Material.REDSTONE_TORCH);
+        ItemMeta meta = item.getItemMeta();
+
+        try {
+            item.setType(Material.getMaterial(Config.getString("sold-all-item-type")));
+            meta.setDisplayName(Config.getString("sold-all-item-name"));
+            meta.setLore(Config.getStringList("sold-all-item-description"));
+        }
+        catch (Exception exp){
+            exp.printStackTrace();
+        }
+
+        meta.getPersistentDataContainer().set(keys.SOLD_ADD_ITEM, PersistentDataType.BOOLEAN, true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+
 }

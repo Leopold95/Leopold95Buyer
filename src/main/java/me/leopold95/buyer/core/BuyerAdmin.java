@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BuyerAdmin {
-    public final PageMain pageMain;
+    //public final PageMain pageMain;
 
     private File bConfigFile;
     private FileConfiguration bConfig;
@@ -33,13 +33,13 @@ public class BuyerAdmin {
 
     public BuyerAdmin(Buyer plugin){
         this.plugin = plugin;
-        createMessagesConfig("buyer-items.yml", this.plugin);
+        createMessagesConfig("buyer-design.yml", this.plugin);
         //inventories = new BuyerInventories(this.plugin);
-        pageMain = new PageMain();
+        //pageMain = new PageMain();
         buyerItemsManager = new BuyerItemsManager(this.plugin.keys);
-        crateDesign();
+        //crateDesign();
 
-        pageMain.getInventory().setItem(30, buyerItemsManager.createItem(Material.ACACIA_DOOR));
+        //pageMain.getInventory().setItem(30, buyerItemsManager.createItem(Material.ACACIA_DOOR));
     }
 
     public void openPage(Player player, Inventory page){
@@ -49,17 +49,32 @@ public class BuyerAdmin {
         }
 
         player.openInventory(page);
+
     }
 
-    private void crateDesign(){
+    public Inventory getPageMain(){
+        Inventory inv =  new PageMain().getInventory();
+        crateDesign(inv);
+        createButtons(inv);
+        return inv;
+    }
+
+    //создает не кликабельный дизайн для инвентаря продажи
+    private void crateDesign(Inventory inv){
         for(Map.Entry<String, Object> items : getDesignSlots().entrySet()){
             try {
-                pageMain.getInventory().setItem(Integer.parseInt(items.getKey()), new ItemStack(Material.getMaterial(String.valueOf(items.getValue())), 1));
+                inv.setItem(Integer.parseInt(items.getKey()), new ItemStack(Material.getMaterial(String.valueOf(items.getValue())), 1));
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
+    }
+
+    //создает кнопки управления
+    private void  createButtons(Inventory inv){
+        int soldAllSlot = bConfig.getInt("sold-all-slot");
+        inv.setItem(soldAllSlot, buyerItemsManager.createSoldAll());
     }
 
     public void addBuyerItem(ItemStack item){
@@ -68,6 +83,18 @@ public class BuyerAdmin {
 
     public void removeBuyerItem(ItemStack item){
 
+    }
+
+    public List<ItemStack> getAvaliableStoreItems(){
+        List<ItemStack> items = new ArrayList<>();
+
+        return items;
+    }
+
+    public List<ItemStack> getToSellItems(List<Integer> blockedSlots, Inventory inventory){
+        List<ItemStack> items = new ArrayList<>();
+
+        return items;
     }
 
     public List<Integer> getBlockedSlots(){
@@ -86,7 +113,6 @@ public class BuyerAdmin {
         }
         return slots;
     }
-
 
     public Map<String, Object> getDesignSlots(){
         Map<String, Object> childMap = new HashMap<String, Object>();

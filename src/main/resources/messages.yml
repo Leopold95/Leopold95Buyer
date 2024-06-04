@@ -5,3 +5,14 @@ commands-permissions-bad: "У вас недостаточно прав для и
 command-add-args-bad: "Введите команду правильно /buyer %subcommand% %subargs1% %subargs2%"
 command-add-subargs-item: "<предмет>"
 command-add-subargs-cost: "<цена>"
+
+add-item-exists: "Нельзя добавить к продаже уже существующий предмет"
+add-item-air: "Нельзя добавить к продаже воздух"
+add-item-saved: "Предмет доавблен по цене <%itemcost%>. ОБЯЗАТЕЛЬНО перезагрузите сервер, без перезагрузки предметы и цены БУДУТ СБРОШЕНЫ."
+add-item-saved-result: "Статус сохранения. Предмет: %item%. Цена: %cost%."
+
+item-click-sold-all-sound-bad: "&5Такого звука <%sound%> нету! Проверьте настройки конфига."
+item-click-sold-all-ok: "Вы успешно продали все на сумму %cost%"
+item-click-sold-all-money-bad: "Ошибка при получении денег"
+
+

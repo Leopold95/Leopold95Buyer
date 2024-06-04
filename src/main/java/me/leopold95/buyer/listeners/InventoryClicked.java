@@ -3,12 +3,18 @@ package me.leopold95.buyer.listeners;
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.inventories.pages.PageMain;
+import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class InventoryClicked implements Listener {
     private Buyer plugin;
@@ -25,17 +31,53 @@ public class InventoryClicked implements Listener {
         if(!(event.getWhoClicked() instanceof Player player))
             return;
 
-        event.setCancelled(true);
-
         if(event.getCurrentItem() == null)
             return;
 
-        ItemMeta clickedMeta = event.getCurrentItem().getItemMeta();
-        if(clickedMeta.getPersistentDataContainer().has(plugin.keys.CLICKABLE_BUYER_ITEM)){
-            System.out.println("it can be sold");
-        }
+        //только клики в меню сундука
+        if(event.getSlot() != event.getRawSlot())
+            return;
 
-        System.out.println(event.getCurrentItem());
+        //System.out.println(plugin.buyerAdmin.getBlockedSlots());
+
+        List<Integer> bannedSlots = plugin.buyerAdmin.getBlockedSlots();
+        //блокировка действий при нажатии на кнопки интерфнйса
+        if(bannedSlots.contains(event.getSlot()))
+            event.setCancelled(true);
+
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
+            List<ItemStack> itemsToSell = plugin.buyerAdmin.getToSellItems(bannedSlots, event.getInventory());
+
+
+
+
+            double totalCost = 1.4;
+            EconomyResponse r = plugin.economy.depositPlayer(player, totalCost);
+
+            if(r.transactionSuccess()) {
+                String pickedMessage = Config.getMessage("item-click-sold-all-ok")
+                        .replace("%cost%", String.valueOf(plugin.economy.format(r.amount)));
+                player.sendMessage(pickedMessage);
+
+            } else {
+                Bukkit.getConsoleSender().sendMessage(Config.getMessage("item-click-sold-all-money-bad"));
+            }
+
+            try {
+                player.playSound(player, Sound.valueOf(
+                        Config.getString("sold-all-pressed-sound")),
+                        Config.getInt("sold-all-pressed-volume"),
+                        1f);
+            }
+            catch (Exception ep) {
+                String message = Config.getMessage("item-click-sold-all-sound-bad")
+                        .replace("%sound%", Config.getString("sold-all-pressed-sound"));
+                Bukkit.getConsoleSender().sendMessage(message);
+            }
+
+
+            event.getInventory().close();
+        }
 
 
         //prevent only page clicks. inventory is allowed

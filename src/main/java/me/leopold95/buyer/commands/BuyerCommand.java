@@ -3,6 +3,7 @@ package me.leopold95.buyer.commands;
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.enums.CommandList;
+import me.leopold95.buyer.inventories.pages.PageMain;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,13 +24,13 @@ public class BuyerCommand implements CommandExecutor {
         }
 
         if(args.length == 0){
-            plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.pageMain.getInventory());
+            plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.getPageMain());
             return true;
         }
 
         switch (args[0]) {
             case CommandList.OPEN -> {
-                plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.pageMain.getInventory());
+                plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.getPageMain());
             }
 
             case CommandList.ADD_ITEM -> {

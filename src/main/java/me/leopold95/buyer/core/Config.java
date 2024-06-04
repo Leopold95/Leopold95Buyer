@@ -2,6 +2,7 @@ package me.leopold95.buyer.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -44,7 +45,9 @@ public class Config {
     public static ConfigurationSection getSection(String path){return config.getConfigurationSection(path);}
 
     public static List<String> getStringList(String path) {
-        return config.getStringList(path);
+        return config.getStringList(path).stream()
+                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                .toList(); // Or .collect(Collectors.toList()) for older Java versions
     }
 
     public static List<Integer> getIntList(String path) {

@@ -1,5 +1,15 @@
 name-main-page: "Скупщик"
 
+sold-all-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+sold-all-pressed-sound: "BLOCK_STONE_PLACE"
+sold-all-pressed-volume: 80
+sold-all-item-name: "&bПродать"
+sold-all-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
 buyer-open-sound: ""
 buyer-open-sound-volume: 80
 

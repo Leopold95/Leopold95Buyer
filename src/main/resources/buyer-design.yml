@@ -1,4 +1,6 @@
 #расположение не кликабельных элементов + блокировка этих слотов
+sold-all-slot: 53
+
 main-page-design:
   0: RED_STAINED_GLASS_PANE
   1: RED_STAINED_GLASS_PANE
@@ -23,7 +25,6 @@ main-page-design:
   50: RED_STAINED_GLASS_PANE
   51: RED_STAINED_GLASS_PANE
   52: RED_STAINED_GLASS_PANE
-  53: RED_STAINED_GLASS_PANE
 
   17: RED_STAINED_GLASS_PANE
   26: RED_STAINED_GLASS_PANE
