@@ -1,6 +1,7 @@
 package me.leopold95.buyer.core;
 
 import me.leopold95.buyer.Buyer;
+import me.leopold95.buyer.utils.ItemCostPair;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,9 +13,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BuyerSoldRange {
+    public Map<ItemStack, Double> forSaleItems;
+
     private final String ITEMS_LIST = "items-range-list";
     private final String ITEMS_COSTS = "items-cost-list";
 
@@ -25,10 +30,18 @@ public class BuyerSoldRange {
     public BuyerSoldRange(Buyer plugin){
         this.plugin = plugin;
         createItemsConfig("avaliable-items.yml", this.plugin);
+        forSaleItems = getBuyerItemsForSale();
     }
 
+    /**
+     * Добавление премета продажи в список
+     * @param item
+     * @param cost
+     * @param admin
+     * @throws IOException
+     */
     public void addItem(ItemStack item, double cost, Player admin) throws IOException {
-        List<ItemStack> items = loadItems();
+        List<ItemStack> items = getItems();
 
         String saveStatusMessage = Config.getMessage("add-item-saved-result");
 
@@ -42,7 +55,7 @@ public class BuyerSoldRange {
             return;
         }
 
-        List<Double> itemPercents = loadCosts();
+        List<Double> itemPercents = getCosts();
 
         items.add(item);
         itemPercents.add(cost);
@@ -52,8 +65,14 @@ public class BuyerSoldRange {
         admin.sendMessage(Config.getMessage("add-item-saved").replace("%itemcost%", String.valueOf(cost)));
     }
 
+    /**
+     * Удаление промета продажи со списка
+     * @param item
+     * @param admin
+     * @throws IOException
+     */
     public void removeItem(ItemStack item, Player admin) throws IOException {
-        List<ItemStack> items = loadItems();
+        List<ItemStack> items = getItems();
 
         if(item.getType().equals(Material.AIR) || item == null){
             admin.sendMessage(Config.getMessage("remove-event-item-air"));
@@ -61,7 +80,7 @@ public class BuyerSoldRange {
         }
 
         if(items.contains(item)){
-            List<Double> itemCosts = loadCosts();
+            List<Double> itemCosts = getCosts();
 
             List<ItemStack> itemsCopy = new ArrayList<>();
             List<Double> costsCopy = new ArrayList<>();
@@ -84,11 +103,40 @@ public class BuyerSoldRange {
         }
     }
 
-    public int itemsCount(){
-        return loadItems().size();
+    private Map<ItemStack, Double> getBuyerItemsForSale(){
+        Map<ItemStack, Double> pairs = new HashMap<>();
+
+        List<ItemStack> items = getItems();
+        List<Double> costs = getCosts();
+
+        for (int i = 0; i < items.size(); i++){
+            pairs.put(items.get(i), costs.get(i));
+        }
+
+        return pairs;
     }
 
-    private List<ItemStack> loadItems() {
+    /**
+     * Получить список предметов скупщика для продажи и цен из конфига
+     */
+//    private List<ItemCostPair> getBuyerItemsForSale(){
+//        List<ItemCostPair> itemsCosts = new ArrayList<>();
+//
+//        List<ItemStack> items = getItems();
+//        List<Double> costs = getCosts();
+//
+//        for (int i = 0; i < items.size(); i++){
+//            itemsCosts.add(new ItemCostPair(items.get(i), costs.get(i)));
+//        }
+//
+//        return itemsCosts;
+//    }
+
+    /**
+     * Получить список предметов для продажи скупщика из конфига
+     * @return
+     */
+    private List<ItemStack> getItems() {
         ConfigurationSection section = config.getConfigurationSection(ITEMS_LIST);
         List<ItemStack> items = new ArrayList<>();
 
@@ -106,7 +154,12 @@ public class BuyerSoldRange {
         return items;
     }
 
-    private List<Double> loadCosts() {
+
+    /**
+     * Список всех цен на предметы из конфига
+     * @return
+     */
+    private List<Double> getCosts() {
         ConfigurationSection section = config.getConfigurationSection(ITEMS_COSTS);
         List<Double> costs = new ArrayList<>();
 
@@ -119,6 +172,12 @@ public class BuyerSoldRange {
         return costs;
     }
 
+    /**
+     * Сохранить указанные педметы и цены в конфиг
+     * @param items
+     * @param costs
+     * @throws IOException
+     */
     private void saveItems(List<ItemStack> items, List<Double> costs) throws IOException {
         ConfigurationSection section = config.createSection(ITEMS_LIST);
         ConfigurationSection section2 = config.createSection(ITEMS_COSTS);
@@ -131,7 +190,27 @@ public class BuyerSoldRange {
         config.save(filee);
     }
 
+    /**
+     * Сохранить указанные педметы и цены в конфиг
+     */
+    private void saveItems(List<ItemCostPair> items) throws IOException {
+        ConfigurationSection section = config.createSection(ITEMS_LIST);
+        ConfigurationSection section2 = config.createSection(ITEMS_COSTS);
 
+        for (int i = 0; i < items.size(); i++) {
+            section.set(String.valueOf(i), items.get(i).item);
+            section2.set(String.valueOf(i), items.get(i).cost);
+        }
+
+        config.save(filee);
+    }
+
+
+    /**
+     * Инил=циализация конфига предметов скупщика
+     * @param file
+     * @param plugin
+     */
     private void createItemsConfig(String file, JavaPlugin plugin) {
         filee = new File(plugin.getDataFolder(), file);
         if (!filee.exists()) {

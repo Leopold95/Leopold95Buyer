@@ -4,6 +4,7 @@ import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.enums.PermissionsList;
 import me.leopold95.buyer.inventories.BuyerInventories;
 import me.leopold95.buyer.inventories.pages.PageMain;
+import me.leopold95.buyer.utils.ItemCostPair;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,8 +29,8 @@ public class BuyerAdmin {
 
     private Buyer plugin;
     private BuyerInventories inventories;
-
     private BuyerItemsManager buyerItemsManager;
+    public BuyerSoldRange soldRange;
 
     public BuyerAdmin(Buyer plugin){
         this.plugin = plugin;
@@ -37,11 +38,17 @@ public class BuyerAdmin {
         //inventories = new BuyerInventories(this.plugin);
         //pageMain = new PageMain();
         buyerItemsManager = new BuyerItemsManager(this.plugin.keys);
+        soldRange = new BuyerSoldRange(this.plugin);
         //crateDesign();
 
         //pageMain.getInventory().setItem(30, buyerItemsManager.createItem(Material.ACACIA_DOOR));
     }
 
+    /**
+     * Отскрыть странцу инвентаря у игрока
+     * @param player
+     * @param page
+     */
     public void openPage(Player player, Inventory page){
         if(!player.hasPermission(PermissionsList.BUYER_OPEN)){
             player.sendMessage(Config.getMessage("commands-permissions-bad"));
@@ -52,6 +59,10 @@ public class BuyerAdmin {
 
     }
 
+    /**
+     * Получить главную страницу скупщика
+     * @return
+     */
     public Inventory getPageMain(){
         Inventory inv =  new PageMain().getInventory();
         crateDesign(inv);
@@ -59,44 +70,61 @@ public class BuyerAdmin {
         return inv;
     }
 
-    //создает не кликабельный дизайн для инвентаря продажи
-    private void crateDesign(Inventory inv){
-        for(Map.Entry<String, Object> items : getDesignSlots().entrySet()){
-            try {
-                inv.setItem(Integer.parseInt(items.getKey()), new ItemStack(Material.getMaterial(String.valueOf(items.getValue())), 1));
-            }
-            catch (Exception e){
-                e.printStackTrace();
+    /**
+     * Посчитать суммарную стоимость всех предметов
+     * @param info
+     * @return
+     */
+    public double calculateTotalCost(List<ItemCostPair> info){
+        double total = 0;
+
+        for(ItemCostPair pair: info){
+            total += pair.cost;
+        }
+
+        return total;
+    }
+
+    /**
+     * Посчитать суммарную стоимость всех предметов
+     * @return
+     */
+    public double calculateTotalCost(List<ItemStack> itemsToSell, Map<ItemStack, Double> costs){
+        double totalCost = 0.0;
+
+        // Iterate through itemsToSell and sum up the costs if the item exists in the map
+        for (ItemStack item : itemsToSell) {
+            if (costs.containsKey(item)) {
+                totalCost += costs.get(item);
             }
         }
+
+        return totalCost;
     }
 
-    //создает кнопки управления
-    private void  createButtons(Inventory inv){
-        int soldAllSlot = bConfig.getInt("sold-all-slot");
-        inv.setItem(soldAllSlot, buyerItemsManager.createSoldAll());
+    /**
+     * Список предметов, которые лежат в НЕ заблокированных слотах инвентаря
+     * @param blockedSlots
+     * @param inv
+     * @return
+     */
+    public List<ItemStack> getItemsShouldBeSold(List<Integer> blockedSlots, Inventory inv){
+        List<ItemStack> itemsCosts = new ArrayList<>();
+
+        for(int i =  0; i <= inv.getSize(); i++){
+            if(blockedSlots.contains(i))
+                continue;
+
+            itemsCosts.add(inv.getItem(i));
+        }
+
+        return itemsCosts;
     }
 
-    public void addBuyerItem(ItemStack item){
-
-    }
-
-    public void removeBuyerItem(ItemStack item){
-
-    }
-
-    public List<ItemStack> getAvaliableStoreItems(){
-        List<ItemStack> items = new ArrayList<>();
-
-        return items;
-    }
-
-    public List<ItemStack> getToSellItems(List<Integer> blockedSlots, Inventory inventory){
-        List<ItemStack> items = new ArrayList<>();
-
-        return items;
-    }
-
+    /**
+     * Список заблокированных для оазличных дестйвий слотов инвентаря скупщика(не личного)
+     * @return
+     */
     public List<Integer> getBlockedSlots(){
         List<Integer> slots = new ArrayList<>();
 
@@ -114,13 +142,39 @@ public class BuyerAdmin {
         return slots;
     }
 
-    public Map<String, Object> getDesignSlots(){
+    public Map<String, Object> getDesignSlots() {
         Map<String, Object> childMap = new HashMap<String, Object>();
         ConfigurationSection parentSection = bConfig.getConfigurationSection("main-page-design");
 
         childMap = parentSection.getValues(true);
 
         return childMap;
+
+
+    }
+
+    /**
+     * создает не кликабельный дизайн для инвентаря продажи
+     * @param inv
+     */
+    private void crateDesign(Inventory inv){
+        for(Map.Entry<String, Object> items : getDesignSlots().entrySet()){
+            try {
+                inv.setItem(Integer.parseInt(items.getKey()), new ItemStack(Material.getMaterial(String.valueOf(items.getValue())), 1));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * создает кнопки управления
+     * @param inv
+     */
+    private void  createButtons(Inventory inv){
+        int soldAllSlot = bConfig.getInt("sold-all-slot");
+        inv.setItem(soldAllSlot, buyerItemsManager.createSoldAll());
     }
 
     private void createMessagesConfig(String file, JavaPlugin plugin) {

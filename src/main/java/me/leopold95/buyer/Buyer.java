@@ -39,7 +39,6 @@ public final class Buyer extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
     }
 
     private boolean setupEconomy() {

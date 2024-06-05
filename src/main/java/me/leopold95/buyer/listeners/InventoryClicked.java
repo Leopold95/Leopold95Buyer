@@ -5,14 +5,12 @@ import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.inventories.pages.PageMain;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -46,9 +44,12 @@ public class InventoryClicked implements Listener {
             event.setCancelled(true);
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
-            List<ItemStack> itemsToSell = plugin.buyerAdmin.getToSellItems(bannedSlots, event.getInventory());
+            List<ItemStack> itemsToSell = plugin.buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
 
+            double total = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
 
+            System.out.println(itemsToSell);
+            System.out.println(total);
 
 
             double totalCost = 1.4;
@@ -76,7 +77,7 @@ public class InventoryClicked implements Listener {
             }
 
 
-            event.getInventory().close();
+            //event.getInventory().close();
         }
 
 
