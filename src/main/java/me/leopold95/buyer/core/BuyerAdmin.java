@@ -111,7 +111,7 @@ public class BuyerAdmin {
     public List<ItemStack> getItemsShouldBeSold(List<Integer> blockedSlots, Inventory inv){
         List<ItemStack> itemsCosts = new ArrayList<>();
 
-        for(int i =  0; i <= inv.getSize(); i++){
+        for(int i =  0; i < inv.getSize(); i++){
             if(blockedSlots.contains(i))
                 continue;
 
