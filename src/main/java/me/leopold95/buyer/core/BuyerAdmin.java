@@ -63,10 +63,10 @@ public class BuyerAdmin {
      * Получить главную страницу скупщика
      * @return
      */
-    public Inventory getPageMain(){
+    public Inventory getPageMain(Player player){
         Inventory inv =  new PageMain().getInventory();
         crateDesign(inv);
-        createButtons(inv);
+        createButtons(inv, player);
         return inv;
     }
 
@@ -75,27 +75,33 @@ public class BuyerAdmin {
      * @param info
      * @return
      */
-    public double calculateTotalCost(List<ItemCostPair> info){
-        double total = 0;
-
-        for(ItemCostPair pair: info){
-            total += pair.cost;
-        }
-
-        return total;
-    }
+//    public double calculateTotalCost(List<ItemCostPair> info){
+//        double total = 0;
+//
+//        for(ItemCostPair pair: info){
+//            total += pair.cost;
+//        }
+//
+//        return total;
+//    }
 
     /**
      * Посчитать суммарную стоимость всех предметов
-     * @return
      */
     public double calculateTotalCost(List<ItemStack> itemsToSell, Map<ItemStack, Double> costs){
         double totalCost = 0.0;
 
         // Iterate through itemsToSell and sum up the costs if the item exists in the map
         for (ItemStack item : itemsToSell) {
-            if (costs.containsKey(item)) {
-                totalCost += costs.get(item);
+            if(item == null)
+                continue;
+
+            //TODO make this shit normal
+            ItemStack searchableCopy = item.clone();
+            searchableCopy.setAmount(1);
+
+            if (costs.containsKey(searchableCopy)) {
+                totalCost += costs.get(searchableCopy) * item.getAmount();
             }
         }
 
@@ -104,14 +110,11 @@ public class BuyerAdmin {
 
     /**
      * Список предметов, которые лежат в НЕ заблокированных слотах инвентаря
-     * @param blockedSlots
-     * @param inv
-     * @return
      */
     public List<ItemStack> getItemsShouldBeSold(List<Integer> blockedSlots, Inventory inv){
         List<ItemStack> itemsCosts = new ArrayList<>();
 
-        for(int i =  0; i < inv.getSize(); i++){
+        for(int i = 0; i < inv.getSize() - 1; i++){
             if(blockedSlots.contains(i))
                 continue;
 
@@ -123,7 +126,6 @@ public class BuyerAdmin {
 
     /**
      * Список заблокированных для оазличных дестйвий слотов инвентаря скупщика(не личного)
-     * @return
      */
     public List<Integer> getBlockedSlots(){
         List<Integer> slots = new ArrayList<>();
@@ -172,9 +174,9 @@ public class BuyerAdmin {
      * создает кнопки управления
      * @param inv
      */
-    private void  createButtons(Inventory inv){
+    private void  createButtons(Inventory inv, Player player){
         int soldAllSlot = bConfig.getInt("sold-all-slot");
-        inv.setItem(soldAllSlot, buyerItemsManager.createSoldAll());
+        inv.setItem(soldAllSlot, buyerItemsManager.createSoldAll(player));
     }
 
     private void createMessagesConfig(String file, JavaPlugin plugin) {

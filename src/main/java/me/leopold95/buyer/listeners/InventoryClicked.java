@@ -44,6 +44,8 @@ public class InventoryClicked implements Listener {
             event.setCancelled(true);
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
+            event.setCancelled(true);
+
             List<ItemStack> itemsToSell = plugin.buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
 
             double total = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
@@ -51,9 +53,7 @@ public class InventoryClicked implements Listener {
             System.out.println(itemsToSell);
             System.out.println(total);
 
-
-            double totalCost = 1.4;
-            EconomyResponse r = plugin.economy.depositPlayer(player, totalCost);
+            EconomyResponse r = plugin.economy.depositPlayer(player, total);
 
             if(r.transactionSuccess()) {
                 String pickedMessage = Config.getMessage("item-click-sold-all-ok")

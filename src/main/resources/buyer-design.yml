@@ -1,5 +1,6 @@
 #расположение не кликабельных элементов + блокировка этих слотов
 sold-all-slot: 53
+slot-multiplayer-info: 45
 
 main-page-design:
   0: RED_STAINED_GLASS_PANE
@@ -16,7 +17,6 @@ main-page-design:
   18: RED_STAINED_GLASS_PANE
   27: RED_STAINED_GLASS_PANE
   36: RED_STAINED_GLASS_PANE
-  45: RED_STAINED_GLASS_PANE
 
   46: RED_STAINED_GLASS_PANE
   47: RED_STAINED_GLASS_PANE

@@ -8,12 +8,20 @@ public class Keys {
 
     public final NamespacedKey CLICKABLE_BUYER_ITEM;
     public final NamespacedKey CLICKABLE_BUYER_ITEM_BASE_COST;
+
     public final NamespacedKey SOLD_ADD_ITEM;
+    public final NamespacedKey MULTIPLIER_INFO_ITEM;
+
+    public final NamespacedKey BUYER_MULTIPLAYER;
 
     public Keys(Buyer plugin){
         this.plugin = plugin;
         CLICKABLE_BUYER_ITEM = new NamespacedKey(this.plugin, "CLICKABLE_BUYER_ITEM");
         CLICKABLE_BUYER_ITEM_BASE_COST = new NamespacedKey(this.plugin, "CLICKABLE_BUYER_ITEM_BASE_COST");
+
         SOLD_ADD_ITEM = new NamespacedKey(this.plugin, "SOLD_ADD_ITEM");
+        MULTIPLIER_INFO_ITEM = new NamespacedKey(this.plugin, "MULTIPLIER_INFO_ITEM");
+
+        BUYER_MULTIPLAYER = new NamespacedKey(this.plugin, "BUYER_MULTIPLAYER");
     }
 }

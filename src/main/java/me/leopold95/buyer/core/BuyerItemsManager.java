@@ -1,6 +1,7 @@
 package me.leopold95.buyer.core;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -25,7 +26,7 @@ public class BuyerItemsManager {
         return item;
     }
 
-    public ItemStack createSoldAll(){
+    public ItemStack createSoldAll(Player player){
         ItemStack item = new ItemStack(Material.REDSTONE_TORCH);
         ItemMeta meta = item.getItemMeta();
 
@@ -39,6 +40,27 @@ public class BuyerItemsManager {
         }
 
         meta.getPersistentDataContainer().set(keys.SOLD_ADD_ITEM, PersistentDataType.BOOLEAN, true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack createMultiplierInfo(Player player){
+        ItemStack item = new ItemStack(Material.REDSTONE_TORCH);
+        ItemMeta meta = item.getItemMeta();
+
+        try {
+            double multValue = player.getPersistentDataContainer().get(keys.MULTIPLIER_INFO_ITEM, PersistentDataType.DOUBLE);
+            String title = Config.getString("slot-multiplayer-item-name").replace("%value%", String.valueOf(multValue));
+
+            item.setType(Material.getMaterial(Config.getString("slot-multiplayer-item-type")));
+            meta.setDisplayName(title);
+            meta.setLore(Config.getStringList("slot-multiplayer-item-description"));
+        }
+        catch (Exception exp){
+            exp.printStackTrace();
+        }
+
+        meta.getPersistentDataContainer().set(keys.MULTIPLIER_INFO_ITEM, PersistentDataType.BOOLEAN, true);
         item.setItemMeta(meta);
         return item;
     }

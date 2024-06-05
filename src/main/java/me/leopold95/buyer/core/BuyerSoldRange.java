@@ -43,8 +43,6 @@ public class BuyerSoldRange {
     public void addItem(ItemStack item, double cost, Player admin) throws IOException {
         List<ItemStack> items = getItems();
 
-        String saveStatusMessage = Config.getMessage("add-item-saved-result");
-
         if(items.contains(item)){
             admin.sendMessage(Config.getMessage("add-item-exists"));
             return;
@@ -62,7 +60,10 @@ public class BuyerSoldRange {
 
         saveItems(items, itemPercents);
 
-        admin.sendMessage(Config.getMessage("add-item-saved").replace("%itemcost%", String.valueOf(cost)));
+        String saveStatusMessage = Config.getMessage("add-item-saved")
+                .replace("%itemcost%", String.valueOf(cost));
+
+        admin.sendMessage(saveStatusMessage);
     }
 
     /**

@@ -10,6 +10,16 @@ sold-all-item-description:
   - "Строка 2"
   - "&cСтрока 3"
 
+slot-multiplayer-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+slot-multiplayer-pressed-sound: "BLOCK_STONE_PLACE"
+slot-multiplayer-pressed-volume: 80
+slot-multiplayer-item-name: "&bВаш множитель %value%"
+slot-multiplayer-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
 buyer-open-sound: ""
 buyer-open-sound-volume: 80
 
