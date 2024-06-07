@@ -97,10 +97,10 @@ public class BuyerSoldRange {
             //save items config and save percents map section
             saveItems(itemsCopy, costsCopy);
 
-            admin.sendMessage(Config.getMessage("event-item-removed"));
+            admin.sendMessage(Config.getMessage("item-removed"));
         }
         else {
-            admin.sendMessage(Config.getMessage("remove-event-item-bad"));
+            admin.sendMessage(Config.getMessage("remove-item-bad-contains"));
         }
     }
 

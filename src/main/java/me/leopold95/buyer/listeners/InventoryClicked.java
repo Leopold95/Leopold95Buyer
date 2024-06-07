@@ -43,15 +43,23 @@ public class InventoryClicked implements Listener {
         if(bannedSlots.contains(event.getSlot()))
             event.setCancelled(true);
 
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.MULTIPLIER_INFO_ITEM))
+            event.setCancelled(true);
+
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
             event.setCancelled(true);
 
             List<ItemStack> itemsToSell = plugin.buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
 
-            double total = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
+            if(itemsToSell.isEmpty()){
+                player.sendMessage(Config.getMessage("cant-sold-nothing"));
+                return;
+            }
 
-            System.out.println(itemsToSell);
-            System.out.println(total);
+            double total = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
+            int soldItemsAmount = plugin.buyerAdmin.soldItemsAmount(itemsToSell);
+
+            plugin.buyerAdmin.multiplierRules.add(player, soldItemsAmount);
 
             EconomyResponse r = plugin.economy.depositPlayer(player, total);
 

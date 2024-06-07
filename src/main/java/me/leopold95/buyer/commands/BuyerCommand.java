@@ -4,6 +4,7 @@ import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.enums.CommandList;
 import me.leopold95.buyer.inventories.pages.PageMain;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -58,9 +59,30 @@ public class BuyerCommand implements CommandExecutor {
                     player.sendMessage(Config.getMessage("command-add-error"));
                 }
 
+                try{
+                    player.playSound(player, Sound.valueOf("buyer-added-sound"), 1, Config.getInt("buyer-added-sound-volume"));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
             case CommandList.REMOVE_ITEM -> {
+                try {
+                    ItemStack item = player.getInventory().getItemInMainHand().clone();
+                    item.setAmount(1);
+                    plugin.buyerAdmin.soldRange.removeItem(item, player);
+                } catch (IOException e) {
+                    player.sendMessage(Config.getMessage("remove-item-bad-unexpected"));
+                    e.printStackTrace();
+                }
 
+                try{
+                    player.playSound(player, Sound.valueOf("buyer-removed-sound"), 1, Config.getInt("buyer-removed-sound-volume"));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 

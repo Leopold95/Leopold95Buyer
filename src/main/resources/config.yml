@@ -1,5 +1,8 @@
 name-main-page: "Скупщик"
 
+points-per-1-sold-item: 5
+points-for-0-01-multiplier: 100
+
 sold-all-item-type: REDSTONE
 #https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
 sold-all-pressed-sound: "BLOCK_STONE_PLACE"
@@ -22,9 +25,6 @@ slot-multiplayer-item-description:
 
 buyer-open-sound: ""
 buyer-open-sound-volume: 80
-
-buyer-sold-sound: ""
-buyer-sold-sound-volume: 80
 
 buyer-added-sound: ""
 buyer-added-sound-volume: 80

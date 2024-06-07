@@ -16,4 +16,11 @@ item-click-sold-all-sound-bad: "&5Такого звука <%sound%> нету! П
 item-click-sold-all-ok: "Вы успешно продали все на сумму %cost%"
 item-click-sold-all-money-bad: "Ошибка при получении денег"
 
+item-removed: "Предмет успешно удален из ассортимента скупщика"
+remove-item-bad-contains: "Невозможно удалить предмет, которого нету в ассортименте"
+remove-item-bad-unexpected: "Непредвиденная ошибка при удалении предмета. Обратитьсь за помощью к старшим"
+
+multiplier-added: "Вы получили %points% очков. Ваш множитель увеличен на: %multipiler%"
+
+cant-sold-nothing: "Нельзя продать ничего. Положите на приловок несколько предметов"
 

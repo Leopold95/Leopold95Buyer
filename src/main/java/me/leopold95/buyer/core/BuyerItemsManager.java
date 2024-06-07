@@ -49,7 +49,7 @@ public class BuyerItemsManager {
         ItemMeta meta = item.getItemMeta();
 
         try {
-            double multValue = player.getPersistentDataContainer().get(keys.MULTIPLIER_INFO_ITEM, PersistentDataType.DOUBLE);
+            double multValue = player.getPersistentDataContainer().get(keys.BUYER_MULTIPLAYER, PersistentDataType.DOUBLE);
             String title = Config.getString("slot-multiplayer-item-name").replace("%value%", String.valueOf(multValue));
 
             item.setType(Material.getMaterial(Config.getString("slot-multiplayer-item-type")));
