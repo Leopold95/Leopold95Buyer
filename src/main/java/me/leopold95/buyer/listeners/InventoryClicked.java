@@ -49,19 +49,26 @@ public class InventoryClicked implements Listener {
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
             event.setCancelled(true);
 
+            //получает список преметов, в слотах которые нужно продать
             List<ItemStack> itemsToSell = plugin.buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
 
-            if(itemsToSell.isEmpty()){
+            //глобальная цена всех предметов, которые можно продать
+            double totalCost = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
+
+            if(totalCost == 0){
                 player.sendMessage(Config.getMessage("cant-sold-nothing"));
+                plugin.buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, bannedSlots);
                 return;
             }
 
-            double total = plugin.buyerAdmin.calculateTotalCost(itemsToSell, plugin.buyerAdmin.soldRange.forSaleItems);
+            //общее количесво предметов для продажи
             int soldItemsAmount = plugin.buyerAdmin.soldItemsAmount(itemsToSell);
 
+            //добавить игроку множитель продажи основываясь на колчестве проданных предметов
             plugin.buyerAdmin.multiplierRules.add(player, soldItemsAmount);
 
-            EconomyResponse r = plugin.economy.depositPlayer(player, total);
+            //попвтаться начилить игроку деньги, вырученные с продажи
+            EconomyResponse r = plugin.economy.depositPlayer(player, totalCost);
 
             if(r.transactionSuccess()) {
                 String pickedMessage = Config.getMessage("item-click-sold-all-ok")
@@ -83,6 +90,12 @@ public class InventoryClicked implements Listener {
                         .replace("%sound%", Config.getString("sold-all-pressed-sound"));
                 Bukkit.getConsoleSender().sendMessage(message);
             }
+
+            //удалить проданные вещи
+            plugin.buyerAdmin.removeSoldItems(event.getInventory(), bannedSlots);
+
+            plugin.buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, bannedSlots);
+
 
 
             //event.getInventory().close();

@@ -49,6 +49,43 @@ public class BuyerAdmin {
     }
 
     /**
+     * Удаляет проданные предметы из окна магазина
+     * @param inv
+     */
+    public void removeSoldItems(Inventory inv, List<Integer> bannedSlots){
+        List<Material> sellingItemsMaterials = new ArrayList<>();
+
+        for(int i = 0; i < inv.getSize() - 1; i++){
+            if(inv.getItem(i) == null)
+                continue;
+
+            if(bannedSlots.contains(i))
+                continue;
+
+            if(soldRange.forSaleItemsTypes.contains(inv.getItem(i).getType())){
+                inv.setItem(i, null);
+            }
+        }
+    }
+
+    public void returnUnsoldItemsToPlayer(Inventory inv, Player player, List<Integer> bannedSlots){
+        for(int i = 0; i < inv.getSize() - 1; i++){
+            if(inv.getItem(i) == null)
+                continue;
+
+            if(bannedSlots.contains(i))
+                continue;
+
+            if(!player.getInventory().isEmpty())
+                player.getInventory().addItem(inv.getItem(i));
+            else
+                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), inv.getItem(i));
+
+            inv.setItem(i, null);
+        }
+    }
+
+    /**
      * Отскрыть странцу инвентаря у игрока
      * @param player
      * @param page
@@ -83,21 +120,6 @@ public class BuyerAdmin {
 
     /**
      * Посчитать суммарную стоимость всех предметов
-     * @param info
-     * @return
-     */
-//    public double calculateTotalCost(List<ItemCostPair> info){
-//        double total = 0;
-//
-//        for(ItemCostPair pair: info){
-//            total += pair.cost;
-//        }
-//
-//        return total;
-//    }
-
-    /**
-     * Посчитать суммарную стоимость всех предметов
      */
     public double calculateTotalCost(List<ItemStack> itemsToSell, Map<ItemStack, Double> costs){
         double totalCost = 0.0;
@@ -119,6 +141,11 @@ public class BuyerAdmin {
         return totalCost;
     }
 
+    /**
+     * Считает общее количево всех предметов для продажи
+     * @param itemsToSell
+     * @return
+     */
     public int soldItemsAmount(List<ItemStack> itemsToSell){
         int sum = 0;
 
@@ -133,7 +160,7 @@ public class BuyerAdmin {
     }
 
     /**
-     * Список предметов, которые лежат в НЕ заблокированных слотах инвентаря
+     * Список предметов, которые лежат в НЕ заблокированных слотах инвентаря (предметы на продажу)
      */
     public List<ItemStack> getItemsShouldBeSold(List<Integer> blockedSlots, Inventory inv){
         List<ItemStack> itemsCosts = new ArrayList<>();
@@ -149,7 +176,7 @@ public class BuyerAdmin {
     }
 
     /**
-     * Список заблокированных для оазличных дестйвий слотов инвентаря скупщика(не личного)
+     * Список заблокированных для различных дестйвий слотов инвентаря скупщика
      */
     public List<Integer> getBlockedSlots(){
         List<Integer> slots = new ArrayList<>();
@@ -164,6 +191,10 @@ public class BuyerAdmin {
                 //Object value = entry.getValue();
                 slots.add(Integer.parseInt(key));
             }
+
+            slots.add(bConfig.getInt("sold-all-slot"));
+            slots.add(bConfig.getInt("slot-multiplayer-info"));
+
         }
         return slots;
     }

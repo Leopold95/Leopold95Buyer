@@ -17,8 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Класс для работы с ассортиментом доступных на продаже вещей у скупщика
+ */
 public class BuyerSoldRange {
     public Map<ItemStack, Double> forSaleItems;
+    public List<Material> forSaleItemsTypes;
 
     private final String ITEMS_LIST = "items-range-list";
     private final String ITEMS_COSTS = "items-cost-list";
@@ -110,9 +114,13 @@ public class BuyerSoldRange {
         List<ItemStack> items = getItems();
         List<Double> costs = getCosts();
 
+        forSaleItemsTypes = new ArrayList<>();
+
         for (int i = 0; i < items.size(); i++){
             pairs.put(items.get(i), costs.get(i));
+            forSaleItemsTypes.add(items.get(i).getType());
         }
+
 
         return pairs;
     }
