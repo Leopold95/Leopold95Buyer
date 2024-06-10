@@ -2,12 +2,14 @@ package me.leopold95.buyer;
 
 import me.leopold95.buyer.commands.BuyerCommand;
 import me.leopold95.buyer.commands.BuyerCommandTab;
+import me.leopold95.buyer.core.AutoBuyerUpdater;
 import me.leopold95.buyer.core.BuyerAdmin;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.core.Keys;
 import me.leopold95.buyer.inventories.BuyerInventories;
 import me.leopold95.buyer.listeners.InventoryClicked;
 import me.leopold95.buyer.listeners.PlayerJoin;
+import me.leopold95.buyer.listeners.PlayerPickupItem;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +21,8 @@ public final class Buyer extends JavaPlugin {
     public Keys keys;
 
     public  Economy economy;
+
+    private AutoBuyerUpdater autoBuyer;
 
     @Override
     public void onEnable() {
@@ -37,6 +41,9 @@ public final class Buyer extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new InventoryClicked(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerPickupItem(), this);
+
+        autoBuyer = new AutoBuyerUpdater(this);
     }
 
     @Override

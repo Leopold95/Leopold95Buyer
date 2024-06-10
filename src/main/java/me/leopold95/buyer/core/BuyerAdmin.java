@@ -5,6 +5,8 @@ import me.leopold95.buyer.enums.PermissionsList;
 import me.leopold95.buyer.inventories.BuyerInventories;
 import me.leopold95.buyer.inventories.pages.PageMain;
 import me.leopold95.buyer.utils.ItemCostPair;
+import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -208,6 +210,33 @@ public class BuyerAdmin {
         return childMap;
 
 
+    }
+
+    public void playSoldSound(Player player){
+        try {
+            player.playSound(player, Sound.valueOf(
+                            Config.getString("sold-all-pressed-sound")),
+                    Config.getInt("sold-all-pressed-volume"),
+                    1f);
+        }
+        catch (Exception ep) {
+            String message = Config.getMessage("item-click-sold-all-sound-bad")
+                    .replace("%sound%", Config.getString("sold-all-pressed-sound"));
+            Bukkit.getConsoleSender().sendMessage(message);
+        }
+    }
+
+    public void depositMoney(Player player, double amount){
+        EconomyResponse r = plugin.economy.depositPlayer(player, amount);
+
+        if(r.transactionSuccess()) {
+            String pickedMessage = Config.getMessage("item-click-sold-all-ok")
+                    .replace("%cost%", String.valueOf(plugin.economy.format(r.amount)));
+            player.sendMessage(pickedMessage);
+
+        } else {
+            Bukkit.getConsoleSender().sendMessage(Config.getMessage("item-click-sold-all-money-bad"));
+        }
     }
 
     /**

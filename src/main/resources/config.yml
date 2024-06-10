@@ -31,3 +31,6 @@ buyer-added-sound-volume: 80
 
 buyer-removed-sound: ""
 buyer-removed-sound-volume: 80
+
+#20t - 1 second
+auto-buyer-update-ticks: 40

@@ -121,7 +121,6 @@ public class BuyerSoldRange {
             forSaleItemsTypes.add(items.get(i).getType());
         }
 
-
         return pairs;
     }
 
