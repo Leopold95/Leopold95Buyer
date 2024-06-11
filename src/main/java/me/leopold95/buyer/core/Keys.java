@@ -15,6 +15,7 @@ public class Keys {
     public final NamespacedKey BUYER_MULTIPLAYER;
 
     public final NamespacedKey PLAYER_AUTO_SELL_ENABLED;
+    public final NamespacedKey ITEM_AUTO_SELL;
 
     public Keys(Buyer plugin){
         this.plugin = plugin;
@@ -27,5 +28,6 @@ public class Keys {
         BUYER_MULTIPLAYER = new NamespacedKey(this.plugin, "BUYER_MULTIPLAYER");
 
         PLAYER_AUTO_SELL_ENABLED = new NamespacedKey(this.plugin, "PLAYER_AUTO_SELL_ENABLED");
+        ITEM_AUTO_SELL = new NamespacedKey(this.plugin, "ITEM_AUTO_SELL");
     }
 }

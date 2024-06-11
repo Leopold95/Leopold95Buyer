@@ -23,4 +23,6 @@ remove-item-bad-unexpected: "Непредвиденная ошибка при у
 multiplier-added: "Вы получили %points% очков. Ваш множитель увеличен на: %multipiler%"
 
 cant-sold-nothing: "Нельзя продать ничего. Положите на приловок несколько предметов"
-
+part:
+  enabled: "вкл"
+  disabled: "выкл"

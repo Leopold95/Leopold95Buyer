@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -48,6 +49,22 @@ public class InventoryClicked implements Listener {
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.MULTIPLIER_INFO_ITEM))
             event.setCancelled(true);
+
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.ITEM_AUTO_SELL)){
+            event.setCancelled(true);
+
+            plugin.buyerAdmin.playAutoSellSound(player);
+
+            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED)){
+                player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.BOOLEAN, true);
+                event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
+            }
+            else {
+                player.getPersistentDataContainer().remove(plugin.keys.PLAYER_AUTO_SELL_ENABLED);
+                event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
+            }
+        }
+
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
             event.setCancelled(true);

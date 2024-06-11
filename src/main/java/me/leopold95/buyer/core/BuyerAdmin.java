@@ -32,7 +32,7 @@ public class BuyerAdmin {
 
     private Buyer plugin;
     private BuyerInventories inventories;
-    private BuyerItemsManager buyerItemsManager;
+    public BuyerItemsManager buyerItemsManager;
 
     public BuyerSoldRange soldRange;
     public MultiplierRules multiplierRules;
@@ -143,6 +143,19 @@ public class BuyerAdmin {
         return totalCost;
     }
 
+    public double calculateTotalCost(ItemStack item, Map<ItemStack, Double> costs){
+        double totalCost = 0.0;
+
+        ItemStack searchableCopy = item.clone();
+        searchableCopy.setAmount(1);
+
+        if (costs.containsKey(searchableCopy)) {
+            totalCost += costs.get(searchableCopy) * item.getAmount();
+        }
+
+        return totalCost;
+    }
+
     /**
      * Считает общее количево всех предметов для продажи
      * @param itemsToSell
@@ -196,7 +209,7 @@ public class BuyerAdmin {
 
             slots.add(bConfig.getInt("sold-all-slot"));
             slots.add(bConfig.getInt("slot-multiplayer-info"));
-
+            slots.add(bConfig.getInt("slot-auto-sell-info"));
         }
         return slots;
     }
@@ -222,6 +235,20 @@ public class BuyerAdmin {
         catch (Exception ep) {
             String message = Config.getMessage("item-click-sold-all-sound-bad")
                     .replace("%sound%", Config.getString("sold-all-pressed-sound"));
+            Bukkit.getConsoleSender().sendMessage(message);
+        }
+    }
+
+    public void playAutoSellSound(Player player){
+        try {
+            player.playSound(player, Sound.valueOf(
+                            Config.getString("slot-auto-sell-pressed-sound")),
+                    Config.getInt("slot-auto-sell-pressed-volume"),
+                    1f);
+        }
+        catch (Exception ep) {
+            String message = Config.getMessage("item-click-sold-all-sound-bad")
+                    .replace("%sound%", Config.getString("slot-multiplayer-pressed-volume"));
             Bukkit.getConsoleSender().sendMessage(message);
         }
     }
@@ -261,6 +288,7 @@ public class BuyerAdmin {
     private void  createButtons(Inventory inv, Player player){
         inv.setItem(bConfig.getInt("sold-all-slot"), buyerItemsManager.createSoldAll(player));
         inv.setItem(bConfig.getInt("slot-multiplayer-info"), buyerItemsManager.createMultiplierInfo(player));
+        inv.setItem(bConfig.getInt("slot-auto-sell-info"), buyerItemsManager.createAutoSellInfo(player));
     }
 
     private void createMessagesConfig(String file, JavaPlugin plugin) {

@@ -23,6 +23,18 @@ slot-multiplayer-item-description:
   - "Строка 2"
   - "&cСтрока 3"
 
+slot-auto-sell-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+slot-auto-sell-pressed-sound: "BLOCK_STONE_PLACE"
+slot-auto-sell-pressed-volume: 80
+slot-auto-sell-item-name: "&bАвто-продажа: %value%"
+slot-auto-sell-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
+
+
 buyer-open-sound: ""
 buyer-open-sound-volume: 80
 
