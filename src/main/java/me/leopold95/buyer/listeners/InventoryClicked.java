@@ -3,6 +3,7 @@ package me.leopold95.buyer.listeners;
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.BuyerAdmin;
 import me.leopold95.buyer.core.Config;
+import me.leopold95.buyer.core.SoundPlayer;
 import me.leopold95.buyer.inventories.pages.PageMain;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -53,7 +54,8 @@ public class InventoryClicked implements Listener {
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.ITEM_AUTO_SELL)){
             event.setCancelled(true);
 
-            plugin.buyerAdmin.playAutoSellSound(player);
+            SoundPlayer.tryPlaySound(player, "slot-auto-sell-pressed-sound", "slot-auto-sell-pressed-volume");
+            //buyerAdmin.playAutoSellSound(player);
 
             if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED)){
                 player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.BOOLEAN, true);
@@ -61,7 +63,7 @@ public class InventoryClicked implements Listener {
             }
             else {
                 player.getPersistentDataContainer().remove(plugin.keys.PLAYER_AUTO_SELL_ENABLED);
-                event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
+                event.getInventory().setItem(event.getRawSlot(), buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
             }
         }
 
@@ -91,7 +93,8 @@ public class InventoryClicked implements Listener {
                 //попвтаться начилить игроку деньги, вырученные с продажи
                 buyerAdmin.depositMoney(player, totalCost);
 
-                buyerAdmin.playSoldSound(player);
+                SoundPlayer.tryPlaySound(player, "sold-all-pressed-sound", "sold-all-pressed-volume");
+                //buyerAdmin.playSoldSound(player);
 
                 //удалить проданные вещи
                 buyerAdmin.removeSoldItems(event.getInventory(), bannedSlots);

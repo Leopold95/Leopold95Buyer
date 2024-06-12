@@ -225,34 +225,6 @@ public class BuyerAdmin {
 
     }
 
-    public void playSoldSound(Player player){
-        try {
-            player.playSound(player, Sound.valueOf(
-                            Config.getString("sold-all-pressed-sound")),
-                    Config.getInt("sold-all-pressed-volume"),
-                    1f);
-        }
-        catch (Exception ep) {
-            String message = Config.getMessage("item-click-sold-all-sound-bad")
-                    .replace("%sound%", Config.getString("sold-all-pressed-sound"));
-            Bukkit.getConsoleSender().sendMessage(message);
-        }
-    }
-
-    public void playAutoSellSound(Player player){
-        try {
-            player.playSound(player, Sound.valueOf(
-                            Config.getString("slot-auto-sell-pressed-sound")),
-                    Config.getInt("slot-auto-sell-pressed-volume"),
-                    1f);
-        }
-        catch (Exception ep) {
-            String message = Config.getMessage("item-click-sold-all-sound-bad")
-                    .replace("%sound%", Config.getString("slot-multiplayer-pressed-volume"));
-            Bukkit.getConsoleSender().sendMessage(message);
-        }
-    }
-
     public void depositMoney(Player player, double amount){
         EconomyResponse r = plugin.economy.depositPlayer(player, amount);
 
