@@ -13,10 +13,10 @@ commands:
 permissions:
   melvuzebuyer:
     open:
-      description: Gives all permissions for the plugin.
+      description: Открытие меню инвентаря
       default: op
     sell:
-      description: Gives all permissions for the plugin.
+      description: Продажа прежметов
       default: op
     additem:
       description: Gives all permissions for the plugin.

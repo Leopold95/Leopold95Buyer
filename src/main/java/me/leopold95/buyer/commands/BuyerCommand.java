@@ -3,6 +3,7 @@ package me.leopold95.buyer.commands;
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.enums.CommandList;
+import me.leopold95.buyer.enums.PermissionsList;
 import me.leopold95.buyer.inventories.pages.PageMain;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -38,6 +39,12 @@ public class BuyerCommand implements CommandExecutor {
             }
 
             case CommandList.ADD_ITEM -> {
+                if(!player.hasPermission(PermissionsList.BUYER_ADD)){
+                    player.sendMessage(Config.getMessage("add-item-permission"));
+                    return true;
+                }
+
+
                 if(args.length != 2){
                     String message = Config.getMessage("command-add-args-bad")
                             .replace("%subcommand%", CommandList.ADD_ITEM)
@@ -68,6 +75,11 @@ public class BuyerCommand implements CommandExecutor {
 
             }
             case CommandList.REMOVE_ITEM -> {
+                if(!player.hasPermission(PermissionsList.BUYER_REMOVE)){
+                    player.sendMessage(Config.getMessage("remove-item-permission"));
+                    return true;
+                }
+
                 try {
                     ItemStack item = player.getInventory().getItemInMainHand().clone();
                     item.setAmount(1);

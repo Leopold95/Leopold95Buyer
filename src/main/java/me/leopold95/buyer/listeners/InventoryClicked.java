@@ -4,6 +4,7 @@ import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.BuyerAdmin;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.core.SoundPlayer;
+import me.leopold95.buyer.enums.PermissionsList;
 import me.leopold95.buyer.inventories.pages.PageMain;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
@@ -71,10 +72,15 @@ public class InventoryClicked implements Listener {
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
             event.setCancelled(true);
 
-            //получает список преметов, в слотах которые нужно продать
-            List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
+            if(!player.hasPermission(PermissionsList.BUYER_SELL)){
+                player.sendMessage(Config.getMessage("sell-permission"));
+                return;
+            }
 
             Bukkit.getScheduler().runTask(plugin, () -> {
+                //получает список преметов, в слотах которые нужно продать
+                List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
+
                 //глобальная цена всех предметов, которые можно продать
                 double totalCost = buyerAdmin.calculateTotalCost(itemsToSell, buyerAdmin.soldRange.forSaleItems);
 
