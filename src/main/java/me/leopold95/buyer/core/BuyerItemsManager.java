@@ -21,7 +21,7 @@ public class BuyerItemsManager {
     public ItemStack createItem(Material type){
         ItemStack item =  new ItemStack(type);
         ItemMeta meta = item.getItemMeta();
-        meta.getPersistentDataContainer().set(keys.CLICKABLE_BUYER_ITEM, PersistentDataType.BOOLEAN, true);
+        meta.getPersistentDataContainer().set(keys.CLICKABLE_BUYER_ITEM, PersistentDataType.INTEGER, 1);
         item.setItemMeta(meta);
         return item;
     }
@@ -39,7 +39,7 @@ public class BuyerItemsManager {
             exp.printStackTrace();
         }
 
-        meta.getPersistentDataContainer().set(keys.SOLD_ADD_ITEM, PersistentDataType.BOOLEAN, true);
+        meta.getPersistentDataContainer().set(keys.SOLD_ADD_ITEM, PersistentDataType.INTEGER, 1);
         item.setItemMeta(meta);
         return item;
     }
@@ -60,7 +60,7 @@ public class BuyerItemsManager {
             exp.printStackTrace();
         }
 
-        meta.getPersistentDataContainer().set(keys.MULTIPLIER_INFO_ITEM, PersistentDataType.BOOLEAN, true);
+        meta.getPersistentDataContainer().set(keys.MULTIPLIER_INFO_ITEM, PersistentDataType.INTEGER, 1);
         item.setItemMeta(meta);
         return item;
     }
@@ -72,7 +72,7 @@ public class BuyerItemsManager {
         try {
             String state = "";
 
-            if(player.getPersistentDataContainer().has(keys.PLAYER_AUTO_SELL_ENABLED)){
+            if(player.getPersistentDataContainer().has(keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER)){
                 state = Config.getMessage("part.enabled");
             }
             else {
@@ -89,7 +89,7 @@ public class BuyerItemsManager {
             exp.printStackTrace();
         }
 
-        meta.getPersistentDataContainer().set(keys.ITEM_AUTO_SELL, PersistentDataType.BOOLEAN, true);
+        meta.getPersistentDataContainer().set(keys.ITEM_AUTO_SELL, PersistentDataType.INTEGER, 1);
         item.setItemMeta(meta);
         return item;
     }

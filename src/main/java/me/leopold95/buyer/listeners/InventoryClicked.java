@@ -5,10 +5,8 @@ import me.leopold95.buyer.core.BuyerAdmin;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.core.SoundPlayer;
 import me.leopold95.buyer.enums.PermissionsList;
-import me.leopold95.buyer.inventories.pages.PageMain;
-import net.milkbowl.vault.economy.EconomyResponse;
+import me.leopold95.buyer.inventories.BuyerPage;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,10 +27,10 @@ public class InventoryClicked implements Listener {
 
     @EventHandler
     private void onMainPageClicked(InventoryClickEvent event){
-        if(!(event.getInventory().getHolder() instanceof PageMain))
+        if(!(event.getInventory().getHolder() instanceof BuyerPage))
             return;
 
-        if(!(event.getWhoClicked() instanceof Player player))
+        if(!(event.getWhoClicked() instanceof Player))
             return;
 
         if(event.getCurrentItem() == null)
@@ -42,24 +40,25 @@ public class InventoryClicked implements Listener {
         if(event.getSlot() != event.getRawSlot())
             return;
 
+        Player player = (Player) event.getWhoClicked();
+
         //System.out.println(plugin.buyerAdmin.getBlockedSlots());
 
-        List<Integer> bannedSlots = buyerAdmin.getBlockedSlots();
         //блокировка действий при нажатии на кнопки интерфнйса
-        if(bannedSlots.contains(event.getSlot()))
+        if(buyerAdmin.bannedSlots.contains(event.getSlot()))
             event.setCancelled(true);
 
-        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.MULTIPLIER_INFO_ITEM))
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.MULTIPLIER_INFO_ITEM, PersistentDataType.INTEGER))
             event.setCancelled(true);
 
-        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.ITEM_AUTO_SELL)){
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.ITEM_AUTO_SELL, PersistentDataType.INTEGER)){
             event.setCancelled(true);
 
             SoundPlayer.tryPlaySound(player, "slot-auto-sell-pressed-sound", "slot-auto-sell-pressed-volume");
             //buyerAdmin.playAutoSellSound(player);
 
-            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED)){
-                player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.BOOLEAN, true);
+            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER)){
+                player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER, 1);
                 event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
             }
             else {
@@ -69,7 +68,7 @@ public class InventoryClicked implements Listener {
         }
 
 
-        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM)){
+        if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM, PersistentDataType.INTEGER)){
             event.setCancelled(true);
 
             if(!player.hasPermission(PermissionsList.BUYER_SELL)){
@@ -79,14 +78,14 @@ public class InventoryClicked implements Listener {
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 //получает список преметов, в слотах которые нужно продать
-                List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(bannedSlots, event.getInventory());
+                List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(buyerAdmin.bannedSlots, event.getInventory());
 
                 //глобальная цена всех предметов, которые можно продать
                 double totalCost = buyerAdmin.calculateTotalCost(itemsToSell, buyerAdmin.soldRange.forSaleItems);
 
                 if(totalCost == 0){
                     player.sendMessage(Config.getMessage("cant-sold-nothing"));
-                    buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, bannedSlots);
+                    buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
                     return;
                 }
 
@@ -103,9 +102,9 @@ public class InventoryClicked implements Listener {
                 //buyerAdmin.playSoldSound(player);
 
                 //удалить проданные вещи
-                buyerAdmin.removeSoldItems(event.getInventory(), bannedSlots);
+                buyerAdmin.removeSoldItems(event.getInventory(), buyerAdmin.bannedSlots);
 
-                buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, bannedSlots);
+                buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
             });
         }
     }

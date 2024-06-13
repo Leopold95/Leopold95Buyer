@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -47,7 +48,7 @@ public class Config {
     public static List<String> getStringList(String path) {
         return config.getStringList(path).stream()
                 .map(line -> ChatColor.translateAlternateColorCodes('&', line))
-                .toList(); // Or .collect(Collectors.toList()) for older Java versions
+                .collect(Collectors.toList()); // Or .collect(Collectors.toList()) for older Java versions
     }
 
     public static List<Integer> getIntList(String path) {

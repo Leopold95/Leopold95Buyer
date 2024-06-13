@@ -14,7 +14,7 @@ public class PlayerJoin implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event){
-        if(!event.getPlayer().getPersistentDataContainer().has(buyer.keys.BUYER_MULTIPLAYER))
+        if(!event.getPlayer().getPersistentDataContainer().has(buyer.keys.BUYER_MULTIPLAYER, PersistentDataType.INTEGER))
             event.getPlayer().getPersistentDataContainer().set(buyer.keys.BUYER_MULTIPLAYER, PersistentDataType.DOUBLE, 0.0);
     }
 }

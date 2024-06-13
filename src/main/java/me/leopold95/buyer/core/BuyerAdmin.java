@@ -2,9 +2,7 @@ package me.leopold95.buyer.core;
 
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.enums.PermissionsList;
-import me.leopold95.buyer.inventories.BuyerInventories;
-import me.leopold95.buyer.inventories.pages.PageMain;
-import me.leopold95.buyer.utils.ItemCostPair;
+import me.leopold95.buyer.inventories.BuyerPage;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -31,11 +29,12 @@ public class BuyerAdmin {
     private FileConfiguration bConfig;
 
     private Buyer plugin;
-    private BuyerInventories inventories;
     public BuyerItemsManager buyerItemsManager;
 
     public BuyerSoldRange soldRange;
     public MultiplierRules multiplierRules;
+
+    public List<Integer> bannedSlots;
 
     public BuyerAdmin(Buyer plugin){
         this.plugin = plugin;
@@ -45,6 +44,7 @@ public class BuyerAdmin {
         buyerItemsManager = new BuyerItemsManager(this.plugin.keys);
         soldRange = new BuyerSoldRange(this.plugin);
         multiplierRules = new MultiplierRules(this.plugin.keys);
+        bannedSlots = getBlockedSlots();
         //crateDesign();
 
         //pageMain.getInventory().setItem(30, buyerItemsManager.createItem(Material.ACACIA_DOOR));
@@ -99,7 +99,7 @@ public class BuyerAdmin {
         }
 
         try{
-            player.playSound(player, Sound.valueOf(Config.getString("buyer-open-sound")), 1, Config.getInt("buyer-open-sound-volume"));
+            player.playSound(player.getLocation(), Sound.valueOf(Config.getString("buyer-open-sound")), 1, Config.getInt("buyer-open-sound-volume"));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -114,7 +114,7 @@ public class BuyerAdmin {
      * @return
      */
     public Inventory getPageMain(Player player){
-        Inventory inv =  new PageMain().getInventory();
+        Inventory inv =  new BuyerPage().getInventory();
         crateDesign(inv);
         createButtons(inv, player);
         return inv;

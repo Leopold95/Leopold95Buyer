@@ -1,7 +1,7 @@
 name: Buyer
 version: '${project.version}'
 main: me.leopold95.buyer.Buyer
-api-version: '1.19'
+api-version: '1.16'
 depend:
   - Vault
 

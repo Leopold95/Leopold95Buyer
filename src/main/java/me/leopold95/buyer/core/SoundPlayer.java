@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 public class SoundPlayer {
     public static void tryPlaySound(Player player, String soundPath, String volumePath){
         try {
-            player.playSound(player,
+            player.playSound(player.getLocation(),
                     Sound.valueOf(Config.getString(soundPath)),
                     Config.getInt(volumePath),
                     1f);

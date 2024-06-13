@@ -5,6 +5,7 @@ import me.leopold95.buyer.abstraction.RepitingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AutoBuyerUpdater extends RepitingTask {
@@ -20,7 +21,7 @@ public class AutoBuyerUpdater extends RepitingTask {
     @Override
     public void run() {
         for(Player player: Bukkit.getOnlinePlayers()){
-            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED))
+            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER))
                 return;
 
             for(int slot = 0; slot < player.getInventory().getSize(); slot++){

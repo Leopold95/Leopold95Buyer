@@ -4,14 +4,12 @@ import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
 import me.leopold95.buyer.enums.CommandList;
 import me.leopold95.buyer.enums.PermissionsList;
-import me.leopold95.buyer.inventories.pages.PageMain;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -22,11 +20,13 @@ public class BuyerCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(!(sender instanceof Player player)){
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        if(!(sender instanceof Player)){
             sender.sendMessage(Config.getMessage("console-bad"));
             return true;
         }
+
+        Player player = (Player) sender;
 
         if(args.length == 0){
             plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.getPageMain(player));
@@ -34,11 +34,11 @@ public class BuyerCommand implements CommandExecutor {
         }
 
         switch (args[0]) {
-            case CommandList.OPEN -> {
+            case CommandList.OPEN:
                 plugin.buyerAdmin.openPage(player, plugin.buyerAdmin.getPageMain(player));
-            }
+            break;
 
-            case CommandList.ADD_ITEM -> {
+            case CommandList.ADD_ITEM:
                 if(!player.hasPermission(PermissionsList.BUYER_ADD)){
                     player.sendMessage(Config.getMessage("add-item-permission"));
                     return true;
@@ -67,35 +67,35 @@ public class BuyerCommand implements CommandExecutor {
                 }
 
                 try{
-                    player.playSound(player, Sound.valueOf("buyer-added-sound"), 1, Config.getInt("buyer-added-sound-volume"));
+                    player.playSound(player.getLocation(), Sound.valueOf("buyer-added-sound"), 1, Config.getInt("buyer-added-sound-volume"));
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
 
-            }
-            case CommandList.REMOVE_ITEM -> {
+            break;
+            case CommandList.REMOVE_ITEM:
                 if(!player.hasPermission(PermissionsList.BUYER_REMOVE)){
                     player.sendMessage(Config.getMessage("remove-item-permission"));
                     return true;
                 }
 
                 try {
-                    ItemStack item = player.getInventory().getItemInMainHand().clone();
-                    item.setAmount(1);
-                    plugin.buyerAdmin.soldRange.removeItem(item, player);
+                    ItemStack item2 = player.getInventory().getItemInMainHand().clone();
+                    item2.setAmount(1);
+                    plugin.buyerAdmin.soldRange.removeItem(item2, player);
                 } catch (IOException e) {
                     player.sendMessage(Config.getMessage("remove-item-bad-unexpected"));
                     e.printStackTrace();
                 }
 
                 try{
-                    player.playSound(player, Sound.valueOf("buyer-removed-sound"), 1, Config.getInt("buyer-removed-sound-volume"));
+                    player.playSound(player.getLocation(), Sound.valueOf("buyer-removed-sound"), 1, Config.getInt("buyer-removed-sound-volume"));
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
-            }
+            break;
         }
 
 
