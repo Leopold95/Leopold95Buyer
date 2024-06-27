@@ -39,7 +39,6 @@ public final class Buyer extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InventoryClicked(this), this);
         getServer().getPluginManager().registerEvents(new InventoryClose(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
-        //getServer().getPluginManager().registerEvents(new PlayerPickupItem(), this);
 
         autoBuyer = new AutoBuyerUpdater(this);
     }

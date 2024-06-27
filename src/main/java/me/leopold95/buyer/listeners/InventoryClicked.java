@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -36,13 +37,13 @@ public class InventoryClicked implements Listener {
         if(event.getCurrentItem() == null)
             return;
 
+        updateSoldButton(event.getInventory());
+
         //только клики в меню сундука
         if(event.getSlot() != event.getRawSlot())
             return;
 
         Player player = (Player) event.getWhoClicked();
-
-        //System.out.println(plugin.buyerAdmin.getBlockedSlots());
 
         //блокировка действий при нажатии на кнопки интерфнйса
         if(buyerAdmin.bannedSlots.contains(event.getSlot()))
@@ -53,59 +54,77 @@ public class InventoryClicked implements Listener {
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.ITEM_AUTO_SELL, PersistentDataType.INTEGER)){
             event.setCancelled(true);
-
-            SoundPlayer.tryPlaySound(player, "slot-auto-sell-pressed-sound", "slot-auto-sell-pressed-volume");
-            //buyerAdmin.playAutoSellSound(player);
-
-            if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER)){
-                player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER, 1);
-                event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
-            }
-            else {
-                player.getPersistentDataContainer().remove(plugin.keys.PLAYER_AUTO_SELL_ENABLED);
-                event.getInventory().setItem(event.getRawSlot(), buyerAdmin.buyerItemsManager.createAutoSellInfo(player));
-            }
+            btnAutoSellClicked(event, player);
         }
-
 
         if(event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(plugin.keys.SOLD_ADD_ITEM, PersistentDataType.INTEGER)){
             event.setCancelled(true);
+            btnSoldAllClicked(event, player);
+        }
+    }
 
-            if(!player.hasPermission(PermissionsList.BUYER_SELL)){
-                player.sendMessage(Config.getMessage("sell-permission"));
+    private void btnSoldAllClicked(InventoryClickEvent event, Player player) {
+        if(!player.hasPermission(PermissionsList.BUYER_SELL)){
+            player.sendMessage(Config.getMessage("sell-permission"));
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            SoundPlayer.tryPlaySound(player, "sold-all-pressed-sound", "sold-all-pressed-volume");
+
+            //получает список преметов, в слотах которые нужно продать
+            List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(buyerAdmin.bannedSlots, event.getInventory());
+
+            //глобальная цена всех предметов, которые можно продать
+            double totalCost = buyerAdmin.calculateTotalCost(itemsToSell, buyerAdmin.soldRange.forSaleItems);
+
+            if(totalCost == 0){
+                player.sendMessage(Config.getMessage("cant-sold-nothing"));
+                buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
                 return;
             }
 
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                //получает список преметов, в слотах которые нужно продать
-                List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(buyerAdmin.bannedSlots, event.getInventory());
+            //общее количесво предметов для продажи
+            int soldItemsAmount = buyerAdmin.soldItemsAmount(itemsToSell);
 
-                //глобальная цена всех предметов, которые можно продать
-                double totalCost = buyerAdmin.calculateTotalCost(itemsToSell, buyerAdmin.soldRange.forSaleItems);
+            //добавить игроку множитель продажи основываясь на колчестве проданных предметов
+            buyerAdmin.multiplierRules.add(player, soldItemsAmount);
 
-                if(totalCost == 0){
-                    player.sendMessage(Config.getMessage("cant-sold-nothing"));
-                    buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
-                    return;
-                }
+            //попвтаться начилить игроку деньги, вырученные с продажи
+            buyerAdmin.depositMoney(player, totalCost);
 
-                //общее количесво предметов для продажи
-                int soldItemsAmount = buyerAdmin.soldItemsAmount(itemsToSell);
+            //SoundPlayer.tryPlaySound(player, "sold-all-pressed-sound", "sold-all-pressed-volume");
+            //buyerAdmin.playSoldSound(player);
 
-                //добавить игроку множитель продажи основываясь на колчестве проданных предметов
-                buyerAdmin.multiplierRules.add(player, soldItemsAmount);
+            //удалить проданные вещи
+            buyerAdmin.removeSoldItems(event.getInventory(), buyerAdmin.bannedSlots);
 
-                //попвтаться начилить игроку деньги, вырученные с продажи
-                buyerAdmin.depositMoney(player, totalCost);
+            buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
+        });
+    }
 
-                SoundPlayer.tryPlaySound(player, "sold-all-pressed-sound", "sold-all-pressed-volume");
-                //buyerAdmin.playSoldSound(player);
+    private void btnAutoSellClicked(InventoryClickEvent event, Player player) {
+        SoundPlayer.tryPlaySound(player, "slot-auto-sell-pressed-sound", "slot-auto-sell-pressed-volume");
 
-                //удалить проданные вещи
-                buyerAdmin.removeSoldItems(event.getInventory(), buyerAdmin.bannedSlots);
-
-                buyerAdmin.returnUnsoldItemsToPlayer(event.getInventory(), player, buyerAdmin.bannedSlots);
-            });
+        if(!player.getPersistentDataContainer().has(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER)){
+            player.getPersistentDataContainer().set(plugin.keys.PLAYER_AUTO_SELL_ENABLED, PersistentDataType.INTEGER, 1);
+            event.getInventory().setItem(event.getRawSlot(), plugin.buyerAdmin.buyerButtons.createAutoSellInfo(player));
         }
+        else {
+            player.getPersistentDataContainer().remove(plugin.keys.PLAYER_AUTO_SELL_ENABLED);
+            event.getInventory().setItem(event.getRawSlot(), buyerAdmin.buyerButtons.createAutoSellInfo(player));
+        }
+    }
+
+    private void updateSoldButton(Inventory inv){
+        //получает список преметов, в слотах которые нужно продать
+        List<ItemStack> itemsToSell = buyerAdmin.getItemsShouldBeSold(buyerAdmin.bannedSlots, inv);
+
+        //глобальная цена всех предметов, которые можно продать
+        double totalCost = buyerAdmin.calculateTotalCost(itemsToSell, buyerAdmin.soldRange.forSaleItems);
+
+        ItemStack newSoldBtn = buyerAdmin.buyerButtons.createSoldAll(totalCost);
+
+        inv.setItem(buyerAdmin.bConfig.getInt("sold-all-slot"), newSoldBtn);
     }
 }

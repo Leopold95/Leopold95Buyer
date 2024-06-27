@@ -2,6 +2,7 @@ package me.leopold95.buyer.commands;
 
 import me.leopold95.buyer.Buyer;
 import me.leopold95.buyer.core.Config;
+import me.leopold95.buyer.core.SoundPlayer;
 import me.leopold95.buyer.enums.CommandList;
 import me.leopold95.buyer.enums.PermissionsList;
 import org.bukkit.Sound;
@@ -66,12 +67,7 @@ public class BuyerCommand implements CommandExecutor {
                     player.sendMessage(Config.getMessage("command-add-error"));
                 }
 
-                try{
-                    player.playSound(player.getLocation(), Sound.valueOf("buyer-added-sound"), 1, Config.getInt("buyer-added-sound-volume"));
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                SoundPlayer.tryPlaySound(player, "buyer-added-sound", "buyer-added-sound-volume");
 
             break;
             case CommandList.REMOVE_ITEM:
@@ -89,12 +85,7 @@ public class BuyerCommand implements CommandExecutor {
                     e.printStackTrace();
                 }
 
-                try{
-                    player.playSound(player.getLocation(), Sound.valueOf("buyer-removed-sound"), 1, Config.getInt("buyer-removed-sound-volume"));
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                SoundPlayer.tryPlaySound(player, "buyer-removed-sound", "buyer-removed-sound-volume");
             break;
         }
 

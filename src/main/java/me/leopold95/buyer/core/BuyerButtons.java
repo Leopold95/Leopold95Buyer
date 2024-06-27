@@ -6,33 +6,37 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-
-public class BuyerItemsManager {
+public class BuyerButtons {
     private Keys keys;
-    public BuyerItemsManager(Keys keys){
+    public BuyerButtons(Keys keys){
         this.keys = keys;
     }
 
-    public ArrayList<ItemStack> getSellableItems(){
-        return new ArrayList<>();
-    }
-
-    public ItemStack createItem(Material type){
-        ItemStack item =  new ItemStack(type);
-        ItemMeta meta = item.getItemMeta();
-        meta.getPersistentDataContainer().set(keys.CLICKABLE_BUYER_ITEM, PersistentDataType.INTEGER, 1);
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    public ItemStack createSoldAll(Player player){
+    public ItemStack createSoldAll(double totalCost){
         ItemStack item = new ItemStack(Material.REDSTONE_TORCH);
         ItemMeta meta = item.getItemMeta();
 
         try {
             item.setType(Material.getMaterial(Config.getString("sold-all-item-type")));
-            meta.setDisplayName(Config.getString("sold-all-item-name"));
+            meta.setDisplayName(Config.getString("sold-all-item-name").replace("%cost%", String.valueOf(totalCost)));
+            meta.setLore(Config.getStringList("sold-all-item-description"));
+        }
+        catch (Exception exp){
+            exp.printStackTrace();
+        }
+
+        meta.getPersistentDataContainer().set(keys.SOLD_ADD_ITEM, PersistentDataType.INTEGER, 1);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public ItemStack createSoldAll(){
+        ItemStack item = new ItemStack(Material.REDSTONE_TORCH);
+        ItemMeta meta = item.getItemMeta();
+
+        try {
+            item.setType(Material.getMaterial(Config.getString("sold-all-item-type")));
+            meta.setDisplayName(Config.getString("sold-all-item-name").replace("%cost%", ""));
             meta.setLore(Config.getStringList("sold-all-item-description"));
         }
         catch (Exception exp){

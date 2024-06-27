@@ -13,9 +13,7 @@ public class SoundPlayer {
                     1f);
         }
         catch (Exception ep) {
-            String message = Config.getMessage("item-click-sold-all-sound-bad")
-                    .replace("%sound%", Config.getString("slot-multiplayer-pressed-volume"));
-            Bukkit.getConsoleSender().sendMessage(message);
+            Bukkit.getConsoleSender().sendMessage(ep.getMessage());
         }
     }
 }

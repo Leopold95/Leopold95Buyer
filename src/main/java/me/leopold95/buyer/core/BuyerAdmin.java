@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,10 +27,10 @@ public class BuyerAdmin {
     //public final PageMain pageMain;
 
     private File bConfigFile;
-    private FileConfiguration bConfig;
+    public FileConfiguration bConfig;
 
     private Buyer plugin;
-    public BuyerItemsManager buyerItemsManager;
+    public BuyerButtons buyerButtons;
 
     public BuyerSoldRange soldRange;
     public MultiplierRules multiplierRules;
@@ -41,7 +42,7 @@ public class BuyerAdmin {
         createMessagesConfig("buyer-design.yml", this.plugin);
         //inventories = new BuyerInventories(this.plugin);
         //pageMain = new PageMain();
-        buyerItemsManager = new BuyerItemsManager(this.plugin.keys);
+        buyerButtons = new BuyerButtons(this.plugin.keys);
         soldRange = new BuyerSoldRange(this.plugin);
         multiplierRules = new MultiplierRules(this.plugin.keys);
         bannedSlots = getBlockedSlots();
@@ -98,15 +99,8 @@ public class BuyerAdmin {
             return;
         }
 
-        try{
-            player.playSound(player.getLocation(), Sound.valueOf(Config.getString("buyer-open-sound")), 1, Config.getInt("buyer-open-sound-volume"));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
         player.openInventory(page);
-
+        SoundPlayer.tryPlaySound(player, "buyer-open-sound", "buyer-open-sound-volume");
     }
 
     /**
@@ -140,7 +134,7 @@ public class BuyerAdmin {
             }
         }
 
-        return totalCost;
+        return Double.parseDouble(String.format("%.3f", totalCost).replace(",", "."));
     }
 
     public double calculateTotalCost(ItemStack item, Map<ItemStack, Double> costs){
@@ -153,7 +147,7 @@ public class BuyerAdmin {
             totalCost += costs.get(searchableCopy) * item.getAmount();
         }
 
-        return totalCost;
+        return Double.parseDouble(String.format("%.3f", totalCost).replace(",", "."));
     }
 
     /**
@@ -258,9 +252,9 @@ public class BuyerAdmin {
      * @param inv
      */
     private void  createButtons(Inventory inv, Player player){
-        inv.setItem(bConfig.getInt("sold-all-slot"), buyerItemsManager.createSoldAll(player));
-        inv.setItem(bConfig.getInt("slot-multiplayer-info"), buyerItemsManager.createMultiplierInfo(player));
-        inv.setItem(bConfig.getInt("slot-auto-sell-info"), buyerItemsManager.createAutoSellInfo(player));
+        inv.setItem(bConfig.getInt("sold-all-slot"), buyerButtons.createSoldAll());
+        inv.setItem(bConfig.getInt("slot-multiplayer-info"), buyerButtons.createMultiplierInfo(player));
+        inv.setItem(bConfig.getInt("slot-auto-sell-info"), buyerButtons.createAutoSellInfo(player));
     }
 
     private void createMessagesConfig(String file, JavaPlugin plugin) {
