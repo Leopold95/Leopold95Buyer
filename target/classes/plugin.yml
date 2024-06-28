@@ -1,0 +1,26 @@
+name: Buyer
+version: '0.4-BETA'
+main: me.leopold95.buyer.Buyer
+api-version: '1.16'
+depend:
+  - Vault
+
+commands:
+  buyer:
+    description: ""
+    usage: ""
+
+permissions:
+  melvuzebuyer:
+    open:
+      description: Открытие меню инвентаря
+      default: op
+    sell:
+      description: Продажа прежметов
+      default: op
+    additem:
+      description: Gives all permissions for the plugin.
+      default: op
+    removeitem:
+      description: Gives all permissions for the plugin.
+      default: op

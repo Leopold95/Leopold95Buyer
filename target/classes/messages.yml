@@ -1,0 +1,31 @@
+console-bad: "Эту команда только для игроков"
+
+commands-permissions-bad: "У вас недостаточно прав для использваония данной команды"
+
+command-add-args-bad: "Введите команду правильно /buyer %subcommand% %subargs2%"
+command-add-error: "Непредвиденная ошабка при добавлении предмета. Обратитесь к старшем для информации"
+command-add-subargs-item: "<предмет>" #remove
+command-add-subargs-cost: "<цена>"
+
+add-item-exists: "Нельзя добавить к продаже уже существующий предмет"
+add-item-air: "Нельзя добавить к продаже воздух"
+add-item-saved: "Предмет доавблен по цене <%itemcost%>. ОБЯЗАТЕЛЬНО перезагрузите сервер, без перезагрузки предметы и цены БУДУТ СБРОШЕНЫ."
+add-item-saved-result: "Статус сохранения. Предмет: %item%. Цена: %cost%."
+add-item-permission: "Вы не можете добавлять предметы"
+
+item-click-sold-all-ok: "Вы успешно продали все на сумму %cost%"
+item-click-sold-all-money-bad: "Ошибка при получении денег"
+
+item-removed: "Предмет успешно удален из ассортимента скупщика"
+remove-item-bad-contains: "Невозможно удалить предмет, которого нету в ассортименте"
+remove-item-bad-unexpected: "Непредвиденная ошибка при удалении предмета. Обратитьсь за помощью к старшим"
+remove-item-permission: "Вы не можете удалять предметы"
+
+sell-permission: "Вы не можете проавать предметы"
+
+multiplier-added: "Вы получили %points% очков. Ваш множитель увеличен на: %multipiler%"
+
+cant-sold-nothing: "Нельзя продать ничего. Положите на приловок несколько предметов"
+part:
+  enabled: "вкл"
+  disabled: "выкл"

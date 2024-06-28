@@ -1,0 +1,48 @@
+name-main-page: "Скупщик"
+
+points-per-1-sold-item: 5
+points-for-0-01-multiplier: 100
+
+sold-all-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+sold-all-pressed-sound: "BLOCK_STONE_PLACE"
+sold-all-pressed-volume: 80
+sold-all-item-name: "&bПродать. %cost%"
+sold-all-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
+slot-multiplayer-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+slot-multiplayer-pressed-sound: "BLOCK_STONE_PLACE"
+slot-multiplayer-pressed-volume: 80
+slot-multiplayer-item-name: "&bВаш множитель %value%"
+slot-multiplayer-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
+slot-auto-sell-item-type: REDSTONE
+#https://jd.papermc.io/paper/1.19/org/bukkit/Sound.html
+slot-auto-sell-pressed-sound: "BLOCK_STONE_PLACE"
+slot-auto-sell-pressed-volume: 80
+slot-auto-sell-item-name: "&bАвто-продажа: %value%"
+slot-auto-sell-item-description:
+  - "Строка 1"
+  - "Строка 2"
+  - "&cСтрока 3"
+
+
+
+buyer-open-sound: ""
+buyer-open-sound-volume: 80
+
+buyer-added-sound: ""
+buyer-added-sound-volume: 80
+
+buyer-removed-sound: ""
+buyer-removed-sound-volume: 80
+
+#20t - 1 second
+auto-buyer-update-ticks: 40
