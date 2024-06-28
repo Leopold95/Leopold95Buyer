@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -25,6 +26,18 @@ public class InventoryClicked implements Listener {
         this.plugin = plugin;
         buyerAdmin = this.plugin.buyerAdmin;
     }
+
+    @EventHandler
+    private void itemGrad(InventoryDragEvent event){
+        if(!(event.getInventory().getHolder() instanceof BuyerPage))
+            return;
+
+        if(!(event.getWhoClicked() instanceof Player))
+            return;
+
+        updateSoldButton(event.getInventory());
+    }
+
 
     @EventHandler
     private void onMainPageClicked(InventoryClickEvent event){
@@ -92,9 +105,6 @@ public class InventoryClicked implements Listener {
 
             //попвтаться начилить игроку деньги, вырученные с продажи
             buyerAdmin.depositMoney(player, totalCost);
-
-            //SoundPlayer.tryPlaySound(player, "sold-all-pressed-sound", "sold-all-pressed-volume");
-            //buyerAdmin.playSoldSound(player);
 
             //удалить проданные вещи
             buyerAdmin.removeSoldItems(event.getInventory(), buyerAdmin.bannedSlots);
